@@ -66,8 +66,8 @@ class RNTrackPlayer: RCTEventEmitter, MediaWrapperDelegate {
             "CAPABILITY_STOP": Capability.stop.rawValue,
             "CAPABILITY_SKIP_TO_NEXT": Capability.next.rawValue,
             "CAPABILITY_SKIP_TO_PREVIOUS": Capability.previous.rawValue,
-            "CAPABILITY_JUMP_FORWARD": Capability.jumpForward.rawValue,
-            "CAPABILITY_JUMP_BACKWARD": Capability.jumpBackward.rawValue
+            "CAPABILITY_SKIP_FORWARD": Capability.skipForward.rawValue,
+            "CAPABILITY_SKIP_BACKWARD": Capability.skipBackward.rawValue
         ]
     }
     
@@ -84,8 +84,8 @@ class RNTrackPlayer: RCTEventEmitter, MediaWrapperDelegate {
             "remote-play",
             "remote-next",
             "remote-previous",
-            "remote-jump-foward",
-            "remote-jump-backward",
+            "remote-skip-foward",
+            "remote-skip-backward",
         ]
     }
     
@@ -308,11 +308,11 @@ class RNTrackPlayer: RCTEventEmitter, MediaWrapperDelegate {
     }
     
     func remoteSendSkipForward(event: MPSkipIntervalCommandEvent) {
-        sendEvent(withName: "remote-jump-foward", body: ["interval": event.interval])
+        sendEvent(withName: "remote-skip-foward", body: ["interval": event.interval])
     }
     
     func remoteSendSkipBackward(event: MPSkipIntervalCommandEvent) {
-        sendEvent(withName: "remote-jump-backward", body: ["interval": event.interval])
+        sendEvent(withName: "remote-skip-backward", body: ["interval": event.interval])
     }
     
     func remoteSentPlayPause() {
