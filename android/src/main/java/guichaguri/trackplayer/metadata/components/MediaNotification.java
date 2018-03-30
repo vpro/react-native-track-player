@@ -52,6 +52,8 @@ public class MediaNotification {
         nb.setCategory(NotificationCompat.CATEGORY_TRANSPORT);
         nb.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         nb.setDeleteIntent(createActionIntent(PlaybackStateCompat.ACTION_STOP));
+        nb.setOngoing(false);
+
 
         String packageName = context.getPackageName();
         Intent openApp = context.getPackageManager().getLaunchIntentForPackage(packageName);
@@ -131,7 +133,6 @@ public class MediaNotification {
     public void updatePlayback(PlaybackStateCompat playback) {
         // Check and update the state
         boolean playing = Utils.isPlaying(playback.getState());
-        nb.setOngoing(playing);
 
         // For pre-lollipop devices, service notifications were ongoing even after foreground was disabled
         // To fix the issue, we'll add a cancel button for them
