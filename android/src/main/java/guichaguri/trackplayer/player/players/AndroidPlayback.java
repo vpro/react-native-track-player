@@ -10,6 +10,8 @@ import android.media.MediaPlayer.OnInfoListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
+import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
 import com.facebook.react.bridge.Promise;
@@ -240,7 +242,7 @@ public class AndroidPlayback extends Playback implements OnInfoListener, OnCompl
         if(hasNext()) {
             updateCurrentTrack(currentTrack + 1, null);
         } else {
-            onEnd();
+            manager.onEnd(getCurrentTrack(), getPosition());
         }
     }
 

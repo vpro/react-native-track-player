@@ -91,7 +91,8 @@ public abstract class Playback {
         for(int i = currentTrack + 1; i < queue.size(); i++) {
             queue.remove(i);
         }
-         manager.onQueueUpdate();
+
+        manager.onQueueUpdate();
     }
 
     public void skip(String id, Promise callback) {
@@ -237,12 +238,5 @@ public abstract class Playback {
         }
 
         manager.onTrackUpdate(previous, position, next, true);
-    }
-
-    protected void onEnd() {
-      Track previous = getCurrentTrack();
-      long position = getPosition();
-
-      manager.onEnd(previous, position);
     }
 }

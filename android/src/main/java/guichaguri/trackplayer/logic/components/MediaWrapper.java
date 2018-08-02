@@ -141,11 +141,13 @@ public class MediaWrapper extends Binder {
     public void getQueue(final Promise callback) {
         Playback pb = manager.getPlayback();
         if(checkPlayback(pb, callback)) return;
-         List queue = new ArrayList();
+
+        List queue = new ArrayList();
         for (Track track : pb.getQueue()) {
             queue.add(track.originalItem);
         }
-         Utils.resolveCallback(callback, Arguments.fromList(queue));
+
+        Utils.resolveCallback(callback, Arguments.fromList(queue));
     }
 
     public void getCurrentTrack(final Promise callback) {
@@ -155,7 +157,7 @@ public class MediaWrapper extends Binder {
         Track track = pb.getCurrentTrack();
 
         if(track == null) {
-            Utils.rejectCallback(callback, "track", "No track playing");
+            Utils.resolveCallback(callback, null);
         } else {
             Utils.resolveCallback(callback, track.id);
         }
