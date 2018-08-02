@@ -62,14 +62,15 @@ public class AudioPlayer: NSObject {
                 playerEventProducer.player = player
                 trackEventProducer.item = currentItem
                 playerEventProducer.startProducingEvents()
-                networkEventProducer.startProducingEvents()
                 trackEventProducer.startProducingEvents()
                 qualityAdjustmentEventProducer.startProducingEvents()
+
+                // Start producing network events if not already doing so
+                networkEventProducer.startProducingEvents()
             } else {
                 playerEventProducer.player = nil
                 trackEventProducer.item = nil
                 playerEventProducer.stopProducingEvents()
-                networkEventProducer.stopProducingEvents()
                 trackEventProducer.stopProducingEvents()
                 qualityAdjustmentEventProducer.stopProducingEvents()
             }
@@ -79,10 +80,10 @@ public class AudioPlayer: NSObject {
     /// The current item being played.
     internal(set) var currentItem: Track? {
         didSet {
+            // Save previous item's progression
+            let oldProgression = currentItemProgression
+
             if let currentItem = currentItem {
-                // Save previous item's progression
-                let oldProgression = currentItemProgression
-                
                 // Stops the current player
                 player?.rate = 0
                 player = nil
@@ -91,7 +92,7 @@ public class AudioPlayer: NSObject {
                 setAudioSession(active: true)
 
                 // Sets new state
-                if reachability.isReachable() || currentItem.url.isLocal {
+                if isOnline || currentItem.url.isLocal {
                     state = .buffering
                     backgroundHandler.beginBackgroundTask()
                 } else {
@@ -100,20 +101,20 @@ public class AudioPlayer: NSObject {
                     backgroundHandler.beginBackgroundTask()
                     return
                 }
-                
+
                 // Reset special state flags
                 pausedForInterruption = false
-                
+
                 // Create new AVPlayerItem
                 let playerItem = AVPlayerItem(url: currentItem.url.value)
-                
+
                 if #available(iOS 10.0, tvOS 10.0, OSX 10.12, *) {
                     playerItem.preferredForwardBufferDuration = self.preferredForwardBufferDuration
                 }
 
                 // Creates new player
                 player = AVPlayer(playerItem: playerItem)
-                
+
                 // Updates information on the lock screen
                 updateNowPlayingInfoCenter()
 
@@ -123,6 +124,7 @@ public class AudioPlayer: NSObject {
                 }
                 player?.rate = rate
             } else {
+                delegate?.audioPlayer(self, willChangeTrackFrom: oldValue, at: oldProgression, to: nil)
                 pause()
             }
         }
@@ -196,6 +198,10 @@ public class AudioPlayer: NSObject {
         }
     }
 
+    func getVolume() -> Float {
+        return player?.volume ?? 1
+    }
+
     /// Defines the rate of the player. Default value is 1.
     var rate = Float(1) {
         didSet {
@@ -205,18 +211,22 @@ public class AudioPlayer: NSObject {
             }
         }
     }
-    
+
+    func getRate() -> Float {
+        return player?.rate ?? 0
+    }
+
     /// Defines the buffering strategy used to determine how much to buffer before starting playback
     var bufferingStrategy: AudioPlayerBufferingStrategy = .defaultBuffering {
         didSet {
             updatePlayerForBufferingStrategy()
         }
     }
-    
+
     /// Defines the preferred buffer duration in seconds before playback begins. Defaults to 60.
     /// Works on iOS/tvOS 10+ when `bufferingStrategy` is `.playWhenPreferredBufferDurationFull`.
     var preferredBufferDurationBeforePlayback = TimeInterval(60)
-    
+
     /// Defines the preferred size of the forward buffer for the underlying `AVPlayerItem`.
     /// Works on iOS/tvOS 10+, default is 0, which lets `AVPlayer` decide.
     var preferredForwardBufferDuration = TimeInterval(0)
@@ -268,9 +278,9 @@ public class AudioPlayer: NSObject {
             }
         }
     }
-    
+
     // MARK: Public Methods
-    
+
     func play(track: Track) {
         currentItem = track
     }
@@ -309,6 +319,13 @@ public class AudioPlayer: NSObject {
     /// The state of the player when the connection was lost
     var stateWhenConnectionLost: AudioPlayerState?
 
+    /// Convenience for checking if platform is currently online
+    var isOnline: Bool {
+        get {
+            return reachability?.isReachable ?? false
+        }
+    }
+
     // MARK: Initialization
 
     /// Initializes a new AudioPlayer.
@@ -324,6 +341,7 @@ public class AudioPlayer: NSObject {
     /// Deinitializes the AudioPlayer. On deinit, the player will simply stop playing anything it was previously
     /// playing.
     deinit {
+        networkEventProducer.stopProducingEvents()
         stop()
     }
 
