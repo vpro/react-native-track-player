@@ -27,12 +27,12 @@ if(file.exists()) {
 }
 
 android {
-    compileSdkVersion 27
-        buildToolsVersion "27.0.3"
+    compileSdkVersion 26
+        buildToolsVersion "26.0.1"
 
     defaultConfig {
         minSdkVersion 16 // RN's minimum version
-        targetSdkVersion 27
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         ndk {
@@ -98,6 +98,6 @@ dependencies {
         provided 'com.danikula:videocache:2.7.0'
     }
 
-    compile 'com.android.support:appcompat-v7:27.+'
+    compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-media-compat:26.+'
 }
