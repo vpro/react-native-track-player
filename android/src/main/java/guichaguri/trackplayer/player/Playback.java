@@ -233,12 +233,12 @@ public abstract class Playback {
 
         load(next, callback);
 
-        if(Utils.isPlaying(oldState)) {
-            Log.d(Utils.TAG, "Playing next track...");
-            play();
-        } else if(Utils.isPaused(oldState)) {
+        if(Utils.isPaused(oldState)) {
             Log.d(Utils.TAG, "Pausing next track...");
             pause();
+        } else {
+            Log.d(Utils.TAG, "Playing next track...");
+            play();
         }
 
         manager.onTrackUpdate(previous, position, next, true);

@@ -226,11 +226,6 @@ public class ExoPlayback extends Playback implements EventListener {
             if(hasNext()) {
                 updateCurrentTrack(currentTrack + 1, null);
 
-                if ( playing ) {
-                    Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: true");
-                    play();
-                }
-
             } else {
                 manager.onEnd(getCurrentTrack(), getPosition());
             }
