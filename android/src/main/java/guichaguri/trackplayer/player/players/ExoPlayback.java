@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import com.facebook.react.bridge.Promise;
 import com.google.android.exoplayer2.*;
 import com.google.android.exoplayer2.ExoPlayer.EventListener;
@@ -214,6 +215,16 @@ public class ExoPlayback extends Playback implements EventListener {
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         playing = playWhenReady;
         updateState(getState(playbackState));
+
+        if ( playing ) {
+
+            Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: true");
+
+        } else {
+            Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: false");
+        }
+
+
 
         if(playbackState == SimpleExoPlayer.STATE_READY) {
 
