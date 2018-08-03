@@ -23,6 +23,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
+import guichaguri.trackplayer.R;
 import guichaguri.trackplayer.logic.Utils;
 import guichaguri.trackplayer.logic.services.PlayerService;
 import java.util.ArrayList;
@@ -66,14 +67,14 @@ public class MediaNotification {
         Intent openApp = context.getPackageManager().getLaunchIntentForPackage(packageName);
         nb.setContentIntent(PendingIntent.getActivity(context, 0, openApp, 0));
 
-        smallIcon = 0;
-        playIcon = loadIcon("play");
-        pauseIcon = loadIcon("pause");
-        stopIcon = loadIcon("stop");
-        previousIcon = loadIcon("previous");
-        nextIcon = loadIcon("next");
-        rewindIcon = loadIcon("rewind");
-        forwardIcon = loadIcon("forward");
+        smallIcon = R.drawable.play;
+        playIcon = R.drawable.play;
+        pauseIcon = R.drawable.pause;
+        stopIcon = R.drawable.stop;
+        previousIcon = R.drawable.previous;
+        nextIcon = R.drawable.next;
+        rewindIcon = R.drawable.rewind;
+        forwardIcon = R.drawable.forward;
 
         nb.setSmallIcon(playIcon);
     }

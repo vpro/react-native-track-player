@@ -159,7 +159,9 @@ public abstract class Playback {
 
     public abstract void seekTo(long ms);
 
-    public abstract float getSpeed();
+    public abstract float getRate();
+
+    public abstract void setRate(float rate);
 
     public abstract float getVolume();
 
