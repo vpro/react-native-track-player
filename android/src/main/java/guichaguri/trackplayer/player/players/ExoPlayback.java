@@ -216,16 +216,6 @@ public class ExoPlayback extends Playback implements EventListener {
         playing = playWhenReady;
         updateState(getState(playbackState));
 
-        if ( playing ) {
-
-            Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: true");
-
-        } else {
-            Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: false");
-        }
-
-
-
         if(playbackState == SimpleExoPlayer.STATE_READY) {
 
             Utils.resolveCallback(loadCallback);
@@ -235,6 +225,12 @@ public class ExoPlayback extends Playback implements EventListener {
 
             if(hasNext()) {
                 updateCurrentTrack(currentTrack + 1, null);
+
+                if ( playing ) {
+                    Log.d(Utils.TAG, "Exo onPlayerStateChanged playWhenReady: true");
+                    play();
+                }
+
             } else {
                 manager.onEnd(getCurrentTrack(), getPosition());
             }
