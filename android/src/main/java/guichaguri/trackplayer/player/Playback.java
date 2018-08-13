@@ -88,8 +88,11 @@ public abstract class Playback {
     }
 
     public void removeUpcomingTracks() {
-        for(int i = currentTrack + 1; i < queue.size(); i++) {
-            queue.remove(i);
+
+        int nextIndex = currentTrack + 1;
+
+        while( queue.size() > nextIndex ) {
+            queue.remove( nextIndex );
         }
 
         manager.onQueueUpdate();
